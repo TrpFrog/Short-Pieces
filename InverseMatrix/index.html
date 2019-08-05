@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="favicon.ico">
+    <script type="text/javascript" src="./InverseMatrix.js"></script>
+    <style>
+      body{ margin: 2em; font-size: 3em;}
+      input{ font-size: 1em; text-align: center; width: 3em;}
+      button{ font-size: 0.8em; }
+    </style>
+    <script>
+      function inputArea (id){
+        html = '<input type="text" id="'+id+'" >';
+        document.write(html);
+      }
+      function readArea (id){
+        html = '<input type="text" id="'+id+'" readonly="readonly">';
+        document.write(html);
+      }
+      function calc(){
+        var aa = parseFloat(document.getElementById("aa").value);
+        var ab = parseFloat(document.getElementById("ab").value);
+        var ac = parseFloat(document.getElementById("ac").value);
+        var ba = parseFloat(document.getElementById("ba").value);
+        var bb = parseFloat(document.getElementById("bb").value);
+        var bc = parseFloat(document.getElementById("bc").value);
+        var ca = parseFloat(document.getElementById("ca").value);
+        var cb = parseFloat(document.getElementById("cb").value);
+        var cc = parseFloat(document.getElementById("cc").value);
+
+        var matrix = createMatrix(aa,ab,ac,ba,bb,bc,ca,cb,cc);
+        var det = getDet(matrix);
+
+        matrix = getInverseMatrix(matrix);
+
+        document.getElementById("aaR").value = matrix[0][0];
+        document.getElementById("abR").value = matrix[0][1];
+        document.getElementById("acR").value = matrix[0][2];
+        document.getElementById("baR").value = matrix[1][0];
+        document.getElementById("bbR").value = matrix[1][1];
+        document.getElementById("bcR").value = matrix[1][2];
+        document.getElementById("caR").value = matrix[2][0];
+        document.getElementById("cbR").value = matrix[2][1];
+        document.getElementById("ccR").value = matrix[2][2];
+        document.getElementById("det").value = det;
+      }
+    </script>
+</head>
+
+<body>
+  <h1 style="font-size: 1em;"> 逆行列計算機 </h1>
+  <p>
+    <table>
+      <tr>
+        <td></td>
+        <td><script>inputArea("aa");</script></td>
+        <td><script>inputArea("ab");</script></td>
+        <td><script>inputArea("ac");</script></td>
+      </tr>
+        <td>A &nbsp; =　</td>
+        <td><script>inputArea("ba");</script></td>
+        <td><script>inputArea("bb");</script></td>
+        <td><script>inputArea("bc");</script></td>
+      <tr>
+      </tr>
+        <td></td>
+        <td><script>inputArea("ca");</script></td>
+        <td><script>inputArea("cb");</script></td>
+        <td><script>inputArea("cc");</script></td>
+      <tr>
+        <td></td>
+        <td style="font-size: 2em;">　</td>
+        <td style="color: gray; font-size: 0.8em;">
+          ↓<button onclick="calc()">計算</button>
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><script>readArea("aaR");</script></td>
+        <td><script>readArea("abR");</script></td>
+        <td><script>readArea("acR");</script></td>
+        <td>　　1</td>
+      </tr>
+        <td>A<sup>-1</sup> =　</td>
+        <td><script>readArea("baR");</script></td>
+        <td><script>readArea("bbR");</script></td>
+        <td><script>readArea("bcR");</script></td>
+        <td>　×──</td>
+      <tr>
+      </tr>
+        <td></td>
+        <td><script>readArea("caR");</script></td>
+        <td><script>readArea("cbR");</script></td>
+        <td><script>readArea("ccR");</script></td>
+        <td>　&nbsp;<input type="text" id="det" readonly="readonly" style="width:2em"></td>
+    </table>
+  </p>
+</body>
