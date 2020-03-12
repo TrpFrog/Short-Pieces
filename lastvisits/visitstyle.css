@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+h1 {
+  font-size: 60px
+}
+
+body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: arial;
+  background-color: black;
+  max-width:1000px;
+  margin-right: auto;
+  margin-left : auto;
+}
