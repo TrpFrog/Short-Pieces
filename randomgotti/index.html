@@ -8,7 +8,7 @@
                 while (tweet.length < 250) {
                     tweet += random[Math.floor(Math.random() * 5)];
                 }
-                tweet += '%0a' + location.origin;
+                tweet += '%0a' + location.href;
                 return 'https://twitter.com/intent/tweet?text=' + tweet;
             }
             location.href = generateTweetLink();
