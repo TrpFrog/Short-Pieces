@@ -1,0 +1,13 @@
+<html lang="ja">
+    <head>
+        <title>B Alert</title>
+        <script type="text/javascript">
+            function generateTweetLink() {
+                let tweet = 'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB';
+                tweet += '%0a' + location.href;
+                return 'https://twitter.com/intent/tweet?text=' + tweet;
+            }
+            location.href = generateTweetLink();
+        </script>
+    </head>
+</html>
