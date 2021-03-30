@@ -1,6 +1,73 @@
-let img = new Image();
+const mapConfig = {
+    xl: 127.5,
+    xr: 147.5,
+    yu: 48.3,
+    yd: 28.3,
 
-function upload(files) {
+    w: 120,
+    h: 120,
+}
+
+const LoLa2XY = (lo, la) => {
+    const x = (la - mapConfig.xl) / (mapConfig.xr - mapConfig.xl) * mapConfig.w;
+    const y = -(lo - mapConfig.yu) / (mapConfig.yu - mapConfig.yd) * mapConfig.h;
+    return {
+        x: Math.round(x),
+        y: Math.round(y),
+    }
+}
+
+const hubenysFormula = (x1, y1, x2, y2) => {
+    const dx = (x2 - x1) / 180.0 * Math.PI;
+    const dy = (y2 - y1) / 180.0 * Math.PI;
+    const p  = (x1 + x2) / 2.0;
+    const rx = 6378137.000; // 赤道半径[m]
+    const ry = 6356752.314245; // 極半径[m]
+    const e  = Math.sqrt(1 - (ry * ry) / (rx * rx)); // 離心率
+    const w  = Math.sqrt(1 - e * e * Math.sin(p));
+    const n  = rx / w; // 子午線曲率半径
+    const m  = rx * (1 - e * e) / (w * w * w); // 卯酉線曲率半径
+    return Math.sqrt(Math.pow(dy * m, 2) + Math.pow(dx * n * Math.cos(p), 2));
+}
+
+const XY2LoLa = (X, Y) => {
+    const binarySearch = (f) => {
+        let l = -500.0, r = 500.0;
+        const eps = 0.00001;
+        while(r - l > eps) {
+            let mid = (l + r) / 2;
+            if(f(mid)) {
+                r = mid;
+            } else {
+                l = mid;
+            }
+        }
+        return l;
+    }
+    
+    const x = Math.floor(X);
+    const y = Math.floor(Y);
+    const isOddX = Math.round(X * 2) % 2 == 1;
+    const isOddY = Math.round(Y * 2) % 2 == 1;
+    
+    const xFirst = binarySearch((mid) => LoLa2XY(mid, 0).y < y + 1 + (isOddY ? 1 : 0));
+    const xLast  = binarySearch((mid) => LoLa2XY(mid, 0).y < y);
+    const yFirst = binarySearch((mid) => LoLa2XY(0, mid).x >= x);
+    const yLast  = binarySearch((mid) => LoLa2XY(0, mid).x >= x + 1 + (isOddX ? 1 : 0));
+
+    console.log(xFirst);
+    console.log(yFirst);
+    console.log(xLast);
+    console.log(yLast);
+    return {
+        lo: (xFirst + xLast) / 2,
+        la: (yFirst + yLast) / 2,
+        d: hubenysFormula(xFirst, yFirst, xLast, yLast)
+    };
+}
+
+function loadingImage(files) {
+    let img = new Image();
     let reader = new FileReader();
     reader.onload = e => img.src = e.target.result;
     img.onload = () => {
@@ -53,103 +120,6 @@ function getRedPointXY(imageData, context) {
     return {x: resX, y: resY};
 }
 
-const mapConfig = {
-    xl: 127.5,
-    xr: 147.5,
-    yu: 48.3,
-    yd: 28.3,
-
-    w: 120,
-    h: 120,
-}
-
-const LoLa2XY = (lo, la) => {
-    const x = (la - mapConfig.xl) / (mapConfig.xr - mapConfig.xl) * mapConfig.w;
-    const y = -(lo - mapConfig.yu) / (mapConfig.yu - mapConfig.yd) * mapConfig.h;
-    return {
-        x: Math.round(x),
-        y: Math.round(y),
-    }
-}
-
-const hubenysFormula = (x1, y1, x2, y2) => {
-    const dx = (x2 - x1) / 180.0 * Math.PI;
-    const dy = (y2 - y1) / 180.0 * Math.PI;
-    const p  = (x1 + x2) / 2.0;
-    const rx = 6378137.000; // 赤道半径[m]
-    const ry = 6356752.314245; // 極半径[m]
-    const e  = Math.sqrt(1 - (ry * ry) / (rx * rx)); // 離心率
-    const w  = Math.sqrt(1 - e * e * Math.sin(p));
-    const n  = rx / w; // 子午線曲率半径
-    const m  = rx * (1 - e * e) / (w * w * w); // 卯酉線曲率半径
-    return Math.sqrt(Math.pow(dy * m, 2) + Math.pow(dx * n * Math.cos(p), 2));
-}
-
-const XY2LoLaWithBinSearch = (x, y) => {
-    let l = -500.0, r = 500.0;
-    const eps = 0.0001;
-    while(r - l > eps) {
-        let mid = (l + r) / 2;
-        if(LoLa2XY(0, mid).x < x - 0.5) {
-            l = mid;
-        } else {
-            r = mid;
-        }
-    }
-    const yFirst = l;
-
-    l = -500.0; r = 500.0;
-    while(r - l > eps) {
-        let mid = (l + r) / 2;
-        if(LoLa2XY(0, mid).x < x + 0.5) {
-            l = mid;
-        } else {
-            r = mid;
-        }
-    }
-    const yLast = l;
-
-    l = -500.0; r = 500.0;
-    while(r - l > eps) {
-        let mid = (l + r) / 2;
-        if(LoLa2XY(mid, 0).y <= y + 0.5) {
-            r = mid;
-        } else {
-            l = mid;
-        }
-    }
-    const xFirst = l;
-
-    l = -500.0; r = 500.0;
-    while(r - l > eps) {
-        let mid = (l + r) / 2;
-        if(LoLa2XY(mid, 0).y <= y - 0.5) {
-            r = mid;
-        } else {
-            l = mid;
-        }
-    }
-    const xLast = l;
-
-    console.log(xFirst);
-    console.log(yFirst);
-    console.log(xLast);
-    console.log(yLast);
-    return {
-        lo: (xFirst + xLast) / 2,
-        la: (yFirst + yLast) / 2,
-        d: hubenysFormula(xFirst, yFirst, xLast, yLast)
-    };
-}
-
-const XY2LoLa = (x, y) => {
-    const la = x * (mapConfig.xr - mapConfig.xl) / mapConfig.w + mapConfig.xl;
-    const lo = - y * (mapConfig.yu - mapConfig.yd) / mapConfig.h + mapConfig.yu;
-    console.log(lo);
-    console.log(la);
-    return {lo, la};
-}
-
 function calc() {
     const canvas = document.getElementById('canvas');
     const context = canvas.getContext('2d');
@@ -159,7 +129,7 @@ function calc() {
     const x = pointXY.x;
     const y = pointXY.y;
 
-    const res = XY2LoLaWithBinSearch(x, y);
+    const res = XY2LoLa(x, y);
     return {
         lo: res.lo,
         la: res.la,
@@ -167,13 +137,22 @@ function calc() {
     };
 }
 
+function copyToClipboard(text) {
+    let copyFrom = document.createElement("textarea");
+    copyFrom.textContent = text;
+    let bodyElm = document.getElementsByTagName("body")[0];
+    bodyElm.appendChild(copyFrom);
+    copyFrom.select();
+    document.execCommand('copy');
+    bodyElm.removeChild(copyFrom);
+}
+
 function view() {
     let res = calc();
     document.getElementById('lo').innerHTML = res.lo.toFixed(4);
     document.getElementById('la').innerHTML = res.la.toFixed(4);
-    document.getElementById('distance').innerHTML  = 
-        '約 ' + Math.round(res.d / 1000) + ' km';
+    document.getElementById('distance').innerHTML = '約 ' + Math.round(res.d / 1000) + ' km';
+    const copyText = res.lo.toFixed(4) + ', ' + res.la.toFixed(4);
+    const button = '<input type="button" onclick="copyToClipboard(\'' + copyText + '\')" value="Copy">'
+    document.getElementById('to_search').innerHTML = copyText + ' ' + button;
 }
-
-
-

@@ -43,9 +43,9 @@
                 <div class="main_window">
                     <h2 class="think">注意</h2>
                     <ul>
-                        <li>ジョークツールです。正しさを保証するものではありません。</li>
-                        <li>元画像がガバガバなので誤差が非常に(数十kmレベル)大きいです。</li>
-                        <li>元サイトの「ダウンロード」ボタンから落とした、120px * 120px の画像のみ有効です。</li>
+                        <li>正しい結果を保証するものではありません！</li>
+                        <li>そもそも元画像がガビガビなので誤差が非常に大きいです。(数十kmレベル)</li>
+                        <li>元サイトの「ダウンロード」ボタンから落とした、120px * 120px のJPEG形式の画像のみ有効です。</li>
                     </ul>
                 </div>
     
@@ -54,7 +54,7 @@
                     <h2 class="robot">マップのアップロード</h2>
                     <p>
                         <input type="file" accept="image/jpeg" alt="画像を選択してください" 
-                                onchange="upload(this.files)">
+                                onchange="loadingImage(this.files)">
                     </p>
                     <p>
                         <canvas id="canvas" width="120px" height="120px"></canvas>
@@ -70,6 +70,10 @@
                     </p>
                     <p>
                         誤差: <b><span id="distance"></span></b>
+                    </p>
+                    <p>
+                        検索用: <span id="to_search"></span><br>
+                        <a href="https://www.google.co.jp/maps">Googleマップ</a>の検索欄にコピー＆ペーストすると位置がわかります。
                     </p>
                 </div>
         
@@ -92,6 +96,7 @@
                                 <li>最も下の y 座標を y1</li>
                             </ul>
                             として、((x0 + x1) / 2, (y0 + y1) / 2) を赤い丸の中心としています。
+                            割り切れなかった場合はまたがる2つ、または4つのピクセルを中心とします。
                         </p>
                         <p>
                             *2: 元のスクリプトの「緯度経度から画像上の座標を決定する関数」
