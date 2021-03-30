@@ -15,6 +15,7 @@
         @import "https://www.trpfrog.net/stylesheets/h2icon.css";
         @import "https://www.trpfrog.net/stylesheets/page_elements.css";
         @import "https://www.trpfrog.net/stylesheets/media.css";
+        @import "https://www.trpfrog.net/stylesheets/linkbutton_grid.css";
 
         .pagetitle_acc {
             color: green;        
@@ -72,8 +73,10 @@
                         誤差: <b><span id="distance"></span></b>
                     </p>
                     <p>
-                        検索用: <span id="to_search"></span><br>
-                        <a href="https://www.google.co.jp/maps">Googleマップ</a>の検索欄にコピー＆ペーストすると位置がわかります。
+                        コピー用: <span id="to_search"></span><br>
+                    </p>
+                    <p>
+                        <span id="map_button"></span>
                     </p>
                 </div>
         
@@ -109,6 +112,14 @@
                             <a href="https://www.trail-note.net/tech/calc_distance/">Hubenyの公式</a> を使っています。
                         </p>
                     </div>
+                </div>
+
+                <div class="main_window">
+                    <h2 class="otaku">ソースコード</h2>
+                    <p>
+                        <a href="https://github.com/TrpFrog/shortpieces/tree/master/inverseMap" 
+                            class="linkButton">View on GitHub</a>
+                    </p>
                 </div>
 
             </div>

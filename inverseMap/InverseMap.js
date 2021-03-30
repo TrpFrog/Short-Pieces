@@ -154,5 +154,8 @@ function view() {
     document.getElementById('distance').innerHTML = '約 ' + Math.round(res.d / 1000) + ' km';
     const copyText = res.lo.toFixed(4) + ', ' + res.la.toFixed(4);
     const button = '<input type="button" onclick="copyToClipboard(\'' + copyText + '\')" value="Copy">'
+    const mapLink = 'https://www.google.com/maps/search/?api=1&query=' + res.lo.toFixed(4) + ',' + res.la.toFixed(4);
+    const mapButton = '<a href="' + mapLink + '" class="linkButton" style="width: 200px"> Googleマップで見る </a>'
     document.getElementById('to_search').innerHTML = copyText + ' ' + button;
+    document.getElementById('map_button').innerHTML = mapButton;
 }
