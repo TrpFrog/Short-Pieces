@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="favicon.ico">
+    <script type="text/javascript" src="https://www.trpfrog.net/contents_builder.js"></script>
+    <script type="text/javascript" src="./InverseMap.js"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <title>inverseMap - つまみネット</title>
+    <style>
+        @import "https://www.trpfrog.net/stylesheets/grid.css";
+        @import "https://www.trpfrog.net/stylesheets/header.css";
+        @import "https://www.trpfrog.net/stylesheets/footer.css";
+        @import "https://www.trpfrog.net/stylesheets/h2icon.css";
+        @import "https://www.trpfrog.net/stylesheets/page_elements.css";
+        @import "https://www.trpfrog.net/stylesheets/media.css";
+
+        .pagetitle_acc {
+            color: green;        
+        }
+        @media (prefers-color-scheme: dark) {
+            .pagetitle_acc {
+                color: rgb(179, 248, 132);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid">
+        <header></header>
+        <main>
+            
+            <div id="main_wrapper">
+                <div id="title">
+                    <h1><span class="pagetitle_acc">i</span>nverse<span class="pagetitle_acc">Map</span></h1>
+                    <p>
+                        淵野アタリさんの<a href="https://hutinoatari.github.io/iMap/">iMap</a>で生成した画像から元の座標<strong>っぽい</strong>ものを割り出します。
+                    </p>
+                </div>
+
+                <div class="main_window">
+                    <h2 class="think">注意</h2>
+                    <ul>
+                        <li>ジョークツールです。正しさを保証するものではありません。</li>
+                        <li>元画像がガバガバなので誤差が非常に(数十kmレベル)大きいです。</li>
+                        <li>元サイトの「ダウンロード」ボタンから落とした、120px * 120px の画像のみ有効です。</li>
+                    </ul>
+                </div>
+    
+                <div class="main_window">
+    
+                    <h2 class="robot">マップのアップロード</h2>
+                    <p>
+                        <input type="file" accept="image/jpeg" alt="画像を選択してください" 
+                                onchange="upload(this.files)">
+                    </p>
+                    <p>
+                        <canvas id="canvas" width="120px" height="120px"></canvas>
+                    </p>
+                    <p>
+                        <span id="warning" style="color: red"></span>
+                    </p>
+                    <p>
+                        緯度: <b><span id="lo"></span></b>
+                    </p>
+                    <p>
+                        経度: <b><span id="la"></span></b>
+                    </p>
+                    <p>
+                        誤差: <b><span id="distance"></span></b>
+                    </p>
+                </div>
+        
+                <div class="main_window">
+                    <h2 class="trpfrog">仕組み</h2>
+                    <p>
+                        全てのピクセルを線形探索して赤い丸の中心座標を見つけます<sup>*1</sup>。 見つけたら次は、赤い丸の座標を (x, y) として二分探索<sup>*2</sup>で
+                        (x - 0.5, y - 0.5), (x + 0.5, y + 0.5) となるような緯度経度を2点求めます。
+                        2点の中点を答えとし、距離<sup>*3</sup>を誤差とします。
+                        
+                    </p>
+            
+                    <div style="font-size: 0.8em">
+                        <p>
+                            *1: 赤っぽいピクセルが出てくるx座標, y座標のうち
+                            <ul>
+                                <li>最も左の x 座標を x0</li>
+                                <li>最も右の x 座標を x1</li>
+                                <li>最も上の y 座標を y0</li>
+                                <li>最も下の y 座標を y1</li>
+                            </ul>
+                            として、((x0 + x1) / 2, (y0 + y1) / 2) を赤い丸の中心としています。
+                        </p>
+                        <p>
+                            *2: 元のスクリプトの「緯度経度から画像上の座標を決定する関数」
+                            を使って判定しています。
+                            式変形して O(1) で求めた方が良さそうですが、
+                            めんどくさいので二分探索しています。(は？)
+                        </p>
+                        <p>
+                            *3: 距離の計算には
+                            <a href="https://www.trail-note.net/tech/calc_distance/">Hubenyの公式</a> を使っています。
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+        <footer></footer>
+    </div>
+</body>
+
+</html>
