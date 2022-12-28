@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <title>Twitter Interaction Circle</title>
+</head>
+<body>
+    <header>
+        <a href="https://trpfrog.net" class="header-button">つまみネット</a>
+        <h1>Twitter Interaction Circle</h1>
+        <span onclick="alert('gottiのケツ、ゴチケツ')" class="header-button">ケツ</span>
+    </header>
+    <main>
+        <div>
+            <p>
+                結果を見るためにあなたのアイコンを 
+                <input type="file" id="file-input"> 
+                to generate your Interaction Circle
+            </p>
+            <img id="result" style="width: 100%">
+            <div id="tweet-area" style="display: none">
+                <p>
+                    <b>画像を保存して</b>ツイートしよう！
+                </p>
+                <a id="tweet-button" target="_blank" rel="noopener noreferrer">
+                    Tweet
+                </a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
